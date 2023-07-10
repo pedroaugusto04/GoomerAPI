@@ -1,23 +1,12 @@
-import { Request, Response } from 'express';
-import { ProductServiceImpl } from '../services/ProductServiceImpl';
-import { inject, injectable } from 'inversify';
-import 'reflect-metadata';
+import { IProduct } from "../models/IProduct";
 
-@injectable()
-export class ProductController {
-  private productServiceImpl: ProductServiceImpl;
+export interface ProductController{
 
-  constructor(@inject(ProductServiceImpl) productServiceImpl: ProductServiceImpl) {
-    this.productServiceImpl = productServiceImpl;
-  }
+    getProducts(): Promise<IProduct[]>;
 
-  public getProducts = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const products = await this.productServiceImpl.getProducts();
-      res.json(products);
-    } catch (error) {
-      console.error('Failed to get products:', error);
-      res.status(500).json({ error: 'Failed to get products' });
-    }
-  };
+    createProduct(product: IProduct): Promise<IProduct>;
+
+    updateProduct(product:IProduct): Promise<IProduct>;
+
+    deleteProduct(productID: string): Promise<void>;
 }

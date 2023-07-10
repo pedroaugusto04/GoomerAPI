@@ -1,24 +1,14 @@
-import { Request, Response } from "express";
-import { RestaurantServiceImpl } from "../services/RestaurantServiceImpl";
-import { inject, injectable } from "inversify";
-import 'reflect-metadata';
+import { IRestaurant } from "../models/IRestaurant";
 
-@injectable()
-export class RestaurantController{
+export interface RestaurantController{
 
-  private restaurantServiceImpl: RestaurantServiceImpl;
+    getRestaurants(): Promise<IRestaurant[]>;
 
-  constructor(@inject(RestaurantServiceImpl) restaurantServiceImpl: RestaurantServiceImpl) {
-    this.restaurantServiceImpl = restaurantServiceImpl;
-  }
+    createRestaurant(restaurant: IRestaurant): Promise<IRestaurant>;
+    
+    // get restaurant
 
-  public getRestaurants = (req: Request, res: Response): void => {
-    try {
-      const restaurants = this.restaurantServiceImpl.getRestaurants();
-      res.json(restaurants);
-    } catch (error) {
-      console.error('Failed to get restaurants:', error);
-      res.status(500).json({ error: 'Failed to get products' });
-    }
-  };
+    updateRestaurant(restaurant:IRestaurant): Promise<IRestaurant>;
+
+    deleteRestaurant(restaurantID: string): Promise<void>;
 }
