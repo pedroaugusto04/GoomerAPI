@@ -6,7 +6,7 @@ export interface ProductController{
 
     createProduct(product: IProduct): Promise<IProduct>;
 
-    updateProduct(product:IProduct): Promise<IProduct>;
+    updateProduct(product: IProduct,product_id: string): Promise<IProduct>;
 
     deleteProduct(productID: string): Promise<void>;
 }

@@ -14,9 +14,9 @@ export class ProductServiceImpl implements ProductService {
         this.productDAOImpl = productDAO;
     }
 
-    public async getProducts(): Promise<IProduct[]> {
+    public async getProducts(restaurant_id: string): Promise<IProduct[]> {
         try {
-            const products: IProduct[] = await this.productDAOImpl.getProducts();
+            const products: IProduct[] = await this.productDAOImpl.getProducts(restaurant_id);
             return products;
         } catch (error) {
             console.error('Failed to get products:', error);
@@ -24,9 +24,9 @@ export class ProductServiceImpl implements ProductService {
         }
     }
     
-    public async createProduct(product: IProduct): Promise<IProduct> {
+    public async createProduct(restaurant_id: string,product: IProduct): Promise<IProduct> {
         try {
-            const productRes: IProduct = await this.productDAOImpl.createProduct(product);
+            const productRes: IProduct = await this.productDAOImpl.createProduct(restaurant_id,product);
             return productRes;
         } catch (error) {
             console.error("Failed to create product: ", error);
@@ -34,9 +34,9 @@ export class ProductServiceImpl implements ProductService {
         }
     }
     
-    public async updateProduct(product: IProduct): Promise<IProduct> {
+    public async updateProduct(product: IProduct,product_id: string): Promise<IProduct> {
         try {
-            const productRes: IProduct = await this.productDAOImpl.updateProduct(product);
+            const productRes: IProduct = await this.productDAOImpl.updateProduct(product,product_id);
             return productRes;
         } catch (error) {
             console.error("Failed to update product: ", error);

@@ -3,10 +3,11 @@ import { RestaurantServiceImpl } from "../services/RestaurantServiceImpl";
 import { RestaurantService } from "../services/RestaurantService";
 import { inject, injectable } from "inversify";
 import { IRestaurant } from "../models/IRestaurant";
+import { RestaurantController } from "./RestaurantController";
 import 'reflect-metadata';
 
 @injectable()
-export class RestaurantControllerImpl{
+export class RestaurantControllerImpl implements RestaurantController {
 
   private restaurantServiceImpl: RestaurantService;
 
@@ -14,9 +15,9 @@ export class RestaurantControllerImpl{
     this.restaurantServiceImpl = restaurantServiceImpl;
   }
 
-  public getRestaurants = (req: Request, res: Response): void => {
+  async getRestaurants(req: Request, res: Response): Promise<void> {
     try {
-      const restaurants = this.restaurantServiceImpl.getRestaurants();
+      const restaurants = await this.restaurantServiceImpl.getRestaurants();
       res.json(restaurants);
     } catch (error) {
       console.error('Failed to get restaurants.', error);
@@ -24,36 +25,47 @@ export class RestaurantControllerImpl{
     }
   };
 
-  public createRestaurant = async(req: Request, res:Response): Promise<void> => {
+  async createRestaurant(req: Request, res: Response): Promise<void> {
     const restaurant: IRestaurant = req.body;
     try {
       const restaurantRes = await this.restaurantServiceImpl.createRestaurant(restaurant);
       res.status(201).json(restaurantRes);
-    } catch (error) { 
+    } catch (error) {
       console.error('Failed to create restaurant.', error);
       res.status(500).json({ error: 'Failed to create restaurant.' });
     }
   }
 
-  public updateRestaurant = async(req: Request, res: Response): Promise<void> => {
+  async getRestaurant(req: Request, res: Response): Promise<void> {
+    try {
+      const restaurant = await this.restaurantServiceImpl.getRestaurant(req.params.restaurant_id);
+      res.json(restaurant);
+    } catch (error) {
+      console.error('Failed to get restaurant.', error);
+      res.status(500).json({ error: 'Failed to get restaurant' });
+    }
+  }
+
+  async updateRestaurant(req: Request, res: Response): Promise<void> {
     const restaurant: IRestaurant = req.body;
     try {
       const restaurantRes = await this.restaurantServiceImpl.updateRestaurant(restaurant);
       res.json(restaurantRes);
-    } catch (error) { 
+    } catch (error) {
       console.error('Failed to update restaurant.', error);
       res.status(500).json({ error: 'Failed to update restaurant.' });
     }
   }
 
-  public deleteRestaurant = async(req: Request, res: Response): Promise<void> => {
-    const restaurantID: string = req.params.restaurantID;
+  async deleteRestaurant(req: Request, res: Response): Promise<void> {
+    const restaurant_id: string = req.params.restaurant_id;
     try {
-      await this.restaurantServiceImpl.deleteRestaurant(restaurantID);
+      await this.restaurantServiceImpl.deleteRestaurant(restaurant_id);
       res.status(204).json();
-    } catch (error) { 
+    } catch (error) {
       console.error('Failed to delete restaurant.', error);
       res.status(500).json({ error: 'Failed to delete restaurant.' });
     }
   }
+
 }

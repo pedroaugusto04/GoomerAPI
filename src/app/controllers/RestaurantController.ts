@@ -1,14 +1,15 @@
 import { IRestaurant } from "../models/IRestaurant";
+import {Request,Response} from "express";
 
 export interface RestaurantController{
 
-    getRestaurants(): Promise<IRestaurant[]>;
+    getRestaurants(req: Request,res: Response): Promise<void>;
 
-    createRestaurant(restaurant: IRestaurant): Promise<IRestaurant>;
+    createRestaurant(req: Request,res: Response): Promise<void>;
     
-    // get restaurant
+    getRestaurant(req: Request,res: Response): Promise<void>;
 
-    updateRestaurant(restaurant:IRestaurant): Promise<IRestaurant>;
+    updateRestaurant(req: Request,res: Response): Promise<void>;
 
-    deleteRestaurant(restaurantID: string): Promise<void>;
+    deleteRestaurant(req: Request,res: Response): Promise<void>;
 }

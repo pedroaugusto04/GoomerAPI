@@ -6,6 +6,8 @@ export interface IProduct {
     photo: string;
     price: number;
     category: ProductCategories;
-    saleDescription?: string;
-    salePrice?: string;
+    sale_description?: string;
+    sale_price?: string;
+    sale_start_date?: string;
+    sale_end_date?: string;
 }

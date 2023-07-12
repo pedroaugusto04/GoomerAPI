@@ -2,11 +2,11 @@ import { IProduct } from "../models/IProduct";
 
 export interface ProductDAO{
 
-    getProducts(): Promise<IProduct[]>;
+    getProducts(restaurant_id: string): Promise<IProduct[]>;
 
-    createProduct(product: IProduct): Promise<IProduct>;
+    createProduct(restaurant_id: string,product: IProduct): Promise<IProduct>;
 
-    updateProduct(product:IProduct): Promise<IProduct>;
+    updateProduct(product: IProduct,product_id: string): Promise<IProduct>;
 
     deleteProduct(productID: string): Promise<void>;
 }

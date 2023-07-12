@@ -1,15 +1,13 @@
 import { IProduct } from "../models/IProduct";
 
-export interface ProductService { 
+export interface ProductService {
 
-    getProducts(): Promise<IProduct[]>;
+    getProducts(restaurant_id: string): Promise<IProduct[]>;
 
-    createProduct(product: IProduct): Promise<IProduct>;
+    createProduct(restaurant_id: string, product: IProduct): Promise<IProduct>;
 
-    // getProduct ?
-    
-    updateProduct(product: IProduct): Promise<IProduct>;
+    updateProduct(product: IProduct,product_id: string): Promise<IProduct>;
 
     deleteProduct(productID: String): Promise<void>;
-    
+
 }

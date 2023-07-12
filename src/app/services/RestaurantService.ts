@@ -7,9 +7,9 @@ export interface RestaurantService {
    
     createRestaurant(restaurant: IRestaurant): Promise<IRestaurant>;
 
-    //getRestaurant(restaurantID: string): Promise<IRestaurant>;
+    getRestaurant(restaurant_id: string): Promise<IRestaurant>;
 
     updateRestaurant(restaurant: IRestaurant): Promise<IRestaurant>;
 
-    deleteRestaurant(restaurantID: string): Promise<void>;
+    deleteRestaurant(restaurant_id: string): Promise<void>;
 }

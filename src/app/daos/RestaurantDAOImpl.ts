@@ -1,4 +1,4 @@
-import { inject,injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { DatabaseConnection } from '../database/DatabaseConnection';
 import { Connection, MysqlError } from 'mysql';
 import { IRestaurant } from '../models/IRestaurant';
@@ -27,11 +27,10 @@ export class RestaurantDAOImpl implements RestaurantDAO {
         });
     }
 
-    
     public createRestaurant(restaurant: IRestaurant): Promise<IRestaurant> {
         return new Promise((resolve, reject) => {
-            let queryString: string = "INSERT INTO restaurants (name,address,photo) VALUES (?,?,?)"
-            let values = [restaurant.name,restaurant.address,restaurant.photo];
+            let queryString: string = "INSERT INTO restaurants (id,name,address,photo,opening_time,closing_time) VALUES (?,?,?,?,?,?)"
+            let values = [restaurant.id, restaurant.name, restaurant.address, restaurant.photo, restaurant.opening_time, restaurant.closing_time];
             this.dbConnection.query(queryString, values, (error: MysqlError | null) => {
                 if (error) {
                     console.error('Failed to execute query:', error);
@@ -39,27 +38,32 @@ export class RestaurantDAOImpl implements RestaurantDAO {
                     return;
                 }
             });
-            queryString = "SELECT * FROM restaurants WHERE id = ?";
-            values = [restaurant.id];
-            this.dbConnection.query(queryString, values, (error: MysqlError | null, results: IRestaurant) => {
+        })
+    }
+
+    public getRestaurant(restaurant_id: string): Promise<IRestaurant> {
+        return new Promise((resolve, reject) => {
+            let queryString: string = "SELECT * FROM restaurants WHERE id = ?";
+            let values = [restaurant_id]
+            this.dbConnection.query(queryString,values, (error: MysqlError | null, result: IRestaurant) => {
                 if (error) {
                     console.error('Failed to execute query:', error);
                     reject(error);
                     return;
                 }
-                resolve(results)
-            })
-        })
+                resolve(result);
+            });
+        });
     }
 
-    
+
     public updateRestaurant(restaurant: IRestaurant): Promise<IRestaurant> {
-        return new Promise((resolve,reject) => {
-            let queryString: string = "UPDATE restaurants SET name = ?, address = ?, photo = ? WHERE id = ?";
-            let values = [restaurant.name,restaurant.address,restaurant.photo,restaurant.id];
-            this.dbConnection.query(queryString,values,(error: MysqlError | null, result) => {
+        return new Promise((resolve, reject) => {
+            let queryString: string = "UPDATE restaurants SET name = ?, address = ?, photo = ?, opening_time = ?, closing_time = ? WHERE id = ?";
+            let values = [restaurant.name, restaurant.address, restaurant.photo, restaurant.opening_time, restaurant.closing_time, restaurant.id];
+            this.dbConnection.query(queryString, values, (error: MysqlError | null, result) => {
                 if (result.affectedRows == 0) reject(new Error("Restaurant doesn't exist"));
-                if (error){
+                if (error) {
                     console.error("Failed to execute query:", error)
                     reject(error);
                     return;
@@ -69,13 +73,13 @@ export class RestaurantDAOImpl implements RestaurantDAO {
         })
     }
 
-    public deleteRestaurant(restaurantID: String): Promise<void> {
-        return new Promise((resolve,reject) => {
+    public deleteRestaurant(restaurant_id: String): Promise<void> {
+        return new Promise((resolve, reject) => {
             let queryString: string = "DELETE FROM restaurants WHERE id = ?";
-            let values = [restaurantID]
-            this.dbConnection.query(queryString,values,(error: MysqlError | null,results) => {
-                if (results.affectedRows == 0) reject(new Error("Product doesn't exist"));
-                if (error){
+            let values = [restaurant_id]
+            this.dbConnection.query(queryString, values, (error: MysqlError | null, results) => {
+                if (results.affectedRows == 0) reject(new Error("Restaurant doesn't exist"));
+                if (error) {
                     console.error("Failed to execute query:", error)
                     reject(error);
                     return;

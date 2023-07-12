@@ -12,24 +12,22 @@ const restaurantControllerImpl = container.resolve(RestaurantControllerImpl);
 
 // Routes
 
-router.get("/products", productControllerImpl.getProducts);
+router.get("/restaurants/:restaurant_id/products", productControllerImpl.getProducts);
 
-router.post("/products",productControllerImpl.createProduct);
+router.post("/restaurants/:restaurant_id/products",productControllerImpl.createProduct);
 
-// router.get("/products/:productID",partnerControllerImpl.getProduct(productID: string))
+router.put("/restaurants/:restaurant_id/products/:product_id",productControllerImpl.updateProduct);
 
-router.put("/products",productControllerImpl.updateProduct);
-
-router.delete("/products/:productID",productControllerImpl.deleteProduct);
+router.delete("/restaurants/:restaurants_id/products/:product_id",productControllerImpl.deleteProduct);
 
 router.get("/restaurants", restaurantControllerImpl.getRestaurants);
 
 router.post("/restaurants",restaurantControllerImpl.createRestaurant);
 
-// router.get("/restaurants/:restaurantID",restaurantControllerImpl.getRestaurant(restaurantID: string))
+router.get("/restaurants/:restaurant_id",restaurantControllerImpl.getRestaurant)
 
-router.put("/restaurants", restaurantControllerImpl.updateRestaurant);
+router.put("/restaurants/:restaurant_id", restaurantControllerImpl.updateRestaurant);
 
-router.delete("/restaurants/:restaurandID",restaurantControllerImpl.deleteRestaurant);
+router.delete("/restaurants/:restaurant_id",restaurantControllerImpl.deleteRestaurant);
 
 export { router };  

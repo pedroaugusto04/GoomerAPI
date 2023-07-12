@@ -13,10 +13,12 @@ export class ProductDAOImpl implements ProductDAO {
         this.dbConnection = dbConnection.getConnection();
     }
 
-    public getProducts(): Promise<IProduct[]> {
+    public getProducts(restaurant_id: string): Promise<IProduct[]> {
         return new Promise((resolve, reject) => {
-            let queryString: string = "SELECT * FROM products";
-            this.dbConnection.query(queryString, (error: MysqlError | null, results: IProduct[]) => {
+            let queryString: string = "SELECT * FROM products WHERE id IN" +
+                "( SELECT product_id from restaurant_product WHERE restaurant_id  = ?)"
+            let values = [restaurant_id]
+            this.dbConnection.query(queryString, values, (error: MysqlError | null, results: IProduct[]) => {
                 if (error) {
                     console.error('Failed to execute query:', error);
                     reject(error);
@@ -27,9 +29,9 @@ export class ProductDAOImpl implements ProductDAO {
         })
     }
 
-    public createProduct(product: IProduct): Promise<IProduct> {
+    public createProduct(restaurant_id: string, product: IProduct): Promise<IProduct> {
         return new Promise((resolve, reject) => {
-            let queryString: string = "INSERT INTO products (id,name,price,photo,category) VALUES (?,?,?,?,?)"
+            let queryString: string = "INSERT INTO products (id,name,price,photo,category) VALUES (?,?,?,?,?);"
             let values = [product.id, product.name, product.price, product.photo, product.category];
             this.dbConnection.query(queryString, values, (error: MysqlError | null) => {
                 if (error) {
@@ -38,48 +40,59 @@ export class ProductDAOImpl implements ProductDAO {
                     return;
                 }
             });
-            queryString = "SELECT * FROM products WHERE id = ?";
-            values = [product.id];
-            this.dbConnection.query(queryString, values, (error: MysqlError | null, results: IProduct) => {
+            queryString = "INSERT INTO restaurant_product (product_id, restaurant_id) VALUES (?,?)";
+            values = [product.id, restaurant_id];
+            this.dbConnection.query(queryString, values, (error: MysqlError | null) => {
                 if (error) {
                     console.error('Failed to execute query:', error);
                     reject(error);
                     return;
                 }
-                resolve(results)
-            })
+            });
+
+            resolve(product);
         })
     }
 
-    public updateProduct(product: IProduct): Promise<IProduct> {
-        return new Promise((resolve,reject) => {
+    public updateProduct(product: IProduct, product_id: string): Promise<IProduct> {
+        return new Promise((resolve, reject) => {
             let queryString: string = "UPDATE products SET name = ?, price = ?, photo = ?, category = ? WHERE id = ?";
-            let values = [product.name,product.price,product.photo,product.category,product.id];
-            this.dbConnection.query(queryString,values,(error: MysqlError | null, result) => {
-                if (result.affectedRows == 0) reject(new Error("Product doesn't exist"));
-                if (error){
+            let values = [product.name, product.price, product.photo, product.category, product_id];
+            this.dbConnection.query(queryString, values, (error: MysqlError | null, result) => {
+                if (error) {
                     console.error("Failed to execute query:", error)
                     reject(error);
                     return;
                 }
+                if (result.affectedRows == 0) reject(new Error("Product doesn't exist"));
                 resolve(product);
             })
         })
     }
 
-    public deleteProduct(productID: String): Promise<void> {
-        return new Promise((resolve,reject) => {
-            let queryString: string = "DELETE FROM products WHERE id = ?";
-            let values = [productID]
-            this.dbConnection.query(queryString,values,(error: MysqlError | null,results) => {
-                if (results.affectedRows == 0) reject(new Error("Product doesn't exist"));
-                if (error){
+    public deleteProduct(product_id: String): Promise<void> {
+        return new Promise((resolve, reject) => {
+            let queryString: string = "DELETE FROM restaurant_product where product_id = ?;";
+            let values = [product_id];
+            this.dbConnection.query(queryString, values, (error: MysqlError | null, result) => {
+                if (error) {
+                    console.error("Failed to execute query:", error)
+                    reject(error);
+                    return;
+                }
+                if (result.affectedRows == 0) reject(new Error("Product doesn't exist"));
+            })
+            queryString = "DELETE FROM products WHERE id = ?;"
+            values = [product_id]
+            this.dbConnection.query(queryString, values, (error: MysqlError | null, result) => {
+                if (error) {
                     console.error("Failed to execute query:", error)
                     reject(error);
                     return;
                 }
                 resolve();
             })
+
         })
     }
 }

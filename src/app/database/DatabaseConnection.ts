@@ -17,11 +17,11 @@ export class DatabaseConnection {
     this.connection.connect((error) => {
       if (error) {
         console.log('Connection failed!', error);
-      } 
+      }
     });
   }
 
   public getConnection(): Connection {
     return this.connection;
   }
-}
+} 

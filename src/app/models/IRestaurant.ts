@@ -5,7 +5,7 @@ export interface IRestaurant {
     name: string;
     address: Address;
     photo: string;
-    sale_start_date: string;
-    sale_end_date: string;
     products: IProduct[];
+    opening_time: string;
+    closing_time: string;
 }

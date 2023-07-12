@@ -34,9 +34,15 @@ export class RestaurantServiceImpl implements RestaurantService {
         }
     }
 
-    /*public async getRestaurant(restaurantID: string): Promise<IRestaurant> {
-        
-    }*/
+    public async getRestaurant(restaurant_id: string): Promise<IRestaurant> {
+        try {
+            const restaurant: IRestaurant = await this.restaurantDAOImpl.getRestaurant(restaurant_id);
+            return restaurant;
+        } catch (error) {
+            console.error('Failed to get restaurants:', error);
+            throw error;
+        }
+    }
 
     public async updateRestaurant(restaurant: IRestaurant): Promise<IRestaurant> {
         try {
@@ -47,9 +53,9 @@ export class RestaurantServiceImpl implements RestaurantService {
             throw error;
         }
     }
-    public async deleteRestaurant(restaurantID: string): Promise<void> {
+    public async deleteRestaurant(restaurant_id: string): Promise<void> {
         try {
-            await this.restaurantDAOImpl.deleteRestaurant(restaurantID);
+            await this.restaurantDAOImpl.deleteRestaurant(restaurant_id);
         } catch (error) {
             console.error("Failed to delete product: ", error);
             throw error;
