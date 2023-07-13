@@ -8,4 +8,4 @@ export interface IRestaurant {
     products: IProduct[];
     opening_time: string;
     closing_time: string;
-}
+}   
