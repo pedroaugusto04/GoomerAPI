@@ -13,7 +13,7 @@ export class ProductControllerImpl {
     this.productServiceImpl = productServiceImpl;
   }
 
-  public getProducts = async (req: Request, res: Response): Promise<void> => {
+  async getProducts(req: Request, res: Response): Promise<void> {
     try {
       const products = await this.productServiceImpl.getProducts(req.params.restaurant_id);
       res.json(products);
@@ -23,7 +23,7 @@ export class ProductControllerImpl {
     }
   }
 
-  public createProduct = async (req: Request, res: Response): Promise<void> => {
+  async createProduct(req: Request, res: Response): Promise<void> {
     const product: IProduct = req.body;
     try {
       const productRes = await this.productServiceImpl.createProduct(req.params.restaurant_id, product);
@@ -34,7 +34,7 @@ export class ProductControllerImpl {
     }
   }
 
-  public updateProduct = async (req: Request, res: Response): Promise<void> => {
+  async updateProduct(req: Request, res: Response): Promise<void> {
     let product = req.body;
     let product_id = req.params.product_id;
     try {
@@ -46,7 +46,7 @@ export class ProductControllerImpl {
     }
   }
 
-  public deleteProduct = async (req: Request, res: Response): Promise<void> => {
+  async deleteProduct(req: Request, res: Response): Promise<void> {
     const productID: String = req.params.product_id;
     try {
       await this.productServiceImpl.deleteProduct(productID);
